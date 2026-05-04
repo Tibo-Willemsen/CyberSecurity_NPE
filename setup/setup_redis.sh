@@ -35,4 +35,6 @@ echo "$PASSWORD" | sudo -S sed -i "s/protected-mode yes/protected-mode no/" /etc
 # 6. Restart
 echo "$PASSWORD" | sudo -S systemctl restart redis-server
 
+echo ""
+
 echo "Redis setup complete."
