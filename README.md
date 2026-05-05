@@ -69,7 +69,7 @@ Voor Alizee:
 
 In setup_redis.sh hebben wij een lijn die zegt: "echo "$PASSWORD" | sudo -S sed -i "s/protected-mode yes/protected-mode no/" /etc/redis/redis.conf". Dit zal de protectie modus van redis afzetten. Dit is effectief de bedoeling en hoort bij onze demonstratie.Wat we proberen simuleren is een luie en slechte admin die dit op off zet om andere devices makkelijker access te geven aan de redis service. Dit komt omdat als het aan staat, dan accepteert redis enkel connecties die van de local host komen. 
 
-Vaak ook maakt deze redis sandbox escape deel uit van een chain van aanvallen. Waarbij de aanvaller eerst connectie maakt met de server zelf, met vb. SSRF, en dan de redis sandbox escape kwetsbaarheid gebruikt om aan de server te geraken. Vaak wordt dit dan ook nog gevolgd door een privlidge escalatie omdat met de redis sandbox escape kwetsbaarheid gebruik jij de user die redis gebruikt (vaak redis). Deze user heeft vaak niet veel rechten of toch niet de nodige. Wat niet betekent dat je niet vanalles kan doen met deze redis gebruiker. 
+Vaak maakt deze redis sandbox escape deel uit van een chain van aanvallen. Waarbij de aanvaller eerst connectie maakt met de server zelf, met vb. SSRF, en dan de redis sandbox escape kwetsbaarheid gebruikt om aan de server te geraken. Vaak wordt dit dan ook nog gevolgd door een privlidge escalatie omdat met de redis sandbox escape kwetsbaarheid gebruik jij de user die redis gebruikt (vaak redis). Deze user heeft vaak niet veel rechten of toch niet de nodige. Wat niet betekent dat je niet vanalles kan doen met deze redis gebruiker. 
 
 ## Makers
 
