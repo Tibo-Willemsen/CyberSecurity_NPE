@@ -1,14 +1,17 @@
-# Configuration - Adjust paths to your local VDI files
+# Variables
 $ExistingVMs = VBoxManage list vms
 $VM_TARGET_NAME = "Redis_Target"
 $VM_KALI_NAME = "Kali_Attacker"
 $VDI_TARGET_PATH = "C:\Users\wille\CyberSecVirt\VDI's\64bit\Ubuntu_20.04.4.vdi"
-$VDI_KALI_PATH = "/path/to/your/kali.vdi"
-$ISO_GUEST_ADDITIONS = "/usr/share/virtualbox/VBoxGuestAdditions.iso"
-$USER = "osboxes"
-$PASS = "osboxes.org"
+$VDI_KALI_PATH = "C:\Users\wille\CyberSecVirt\VDI's\kali-linux-2026.1-virtualbox-amd64\kali-linux-2026.1-virtualbox-amd64.vdi"
+$TARGET_USER = "osboxes"
+$TARGET_PASS = "osboxes.org"
+$KALI_USER = "kali"
+$KALI_PASS = "kali"
 $SETUP_SCRIPT = "C:\Users\wille\CyberSecVirt\CyberSecurity_NPE\setup\setup_redis.sh"
 
+Write-Host "Starten met de installaties van de VMs"
+Write-Host "Verwerken van $VM_TARGET_NAME"
 if ($ExistingVMs -match "`"$VM_TARGET_NAME`"") {
     Write-Host "$VM_TARGET_NAME bestaat al"
 } else {
@@ -27,33 +30,96 @@ if ($ExistingVMs -match "`"$VM_TARGET_NAME`"") {
     # Setup Network Adapters: NAT and Host-only
     VBoxManage modifyvm "$VM_TARGET_NAME" --nic1 nat
     VBoxManage modifyvm "$VM_TARGET_NAME" --nic2 hostonly --hostonlyadapter2 "VirtualBox Host-Only Ethernet Adapter"
+    Write-Host "de installatie $VM_TARGET_NAME was succesvol"
 }
 
-# Start the vm
-VBoxManage startvm "$VM_TARGET_NAME" --type gui
+Write-Host "Verwerken van $VM_KALI_NAME"
+if ($ExistingVMs -match "`"$VM_KALI_NAME`"") {
+    Write-Host "$VM_KALI_NAME bestaat al"
+} else {
+    # Create the Target VM
+    VBoxManage createvm --name "$VM_KALI_NAME" --ostype "Debian_64" --register --groups=/NPE
 
-Start-Sleep -Seconds 60
+    # Set system resources (RAM and CPUs)
+    VBoxManage modifyvm "$VM_KALI_NAME" --memory 2048 --cpus 2 --vram 32
 
-# Wait for guest additions (UNCOMMENTED AND RE-ENABLED)
-# Write-Host "Waiting for Guest Additions to become active..."
-#$ready = $false
-#while (-not $ready) {
-#    # Check if the Guest Additions service is reporting a version
-#    $check = VBoxManage guestproperty get "$VM_TARGET_NAME" "/VirtualBox/GuestAdd/VBoxService/Version"
-#    if ($check -match "Value: ") {
-#        $ready = $true
-#        Write-Host "Guest Additions are LIVE!"
-#    } else {
-#        Write-Host "Still booting... (checking again in 5s)"
-#        
-#    }
-#}
+    # Add a SATA Controller
+    VBoxManage storagectl "$VM_KALI_NAME" --name "SATA Controller" --add sata --controller IntelAhci
+
+    # Attach the downloaded VDI file
+    VBoxManage storageattach "$VM_KALI_NAME" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium "$VDI_KALI_PATH"
+
+    # Setup Network Adapters: NAT and Host-only
+    VBoxManage modifyvm "$VM_KALI_NAME" --nic1 nat
+    VBoxManage modifyvm "$VM_KALI_NAME" --nic2 hostonly --hostonlyadapter2 "VirtualBox Host-Only Ethernet Adapter"
+    Write-Host "de installatie $VM_KALI_NAME was succesvol"
+}
+
+# Start de vms en wacht tot ze reageren
+Write-Host "Opstarten van de VMs en wachten tot ze reageren"
+$MaxRetries = 20
+$RetryCount = 0
+$IsReady = $false
+while (-not $IsReady -and $RetryCount -le $MaxRetries) {
+    $TestCmd = VBoxManage guestcontrol "$VM_TARGET_NAME" run --username $TARGET_USER --password $TARGET_PASS --exe "/usr/bin/whoami" 2>$null
+
+    if ($TestCmd -match $TARGET_USER) {
+        $IsReady = $true
+        Write-Host "Handshake successvol! $VM_TARGET_NAME is klaar"
+    } else {
+        if ($retryCount -eq 0) {
+            Write-Host "Opstarten van $VM_TARGET_NAME"
+            VBoxManage startvm "$VM_TARGET_NAME" --type gui
+            $RetryCount++
+            Write-Host "Wachten tot $VM_TARGET_NAME reageert..."
+        }
+        else {
+            Write-Host "$VM_TARGET_NAME is nog niet klaar (Poging: $RetryCount/$MaxRetries). Wacht 5s..."
+            Start-Sleep -Seconds 5
+            $RetryCount++
+        }
+    }
+}
+
+if (-not $IsReady) {
+    Write-Error "$VM_TARGET_NAME reageert niet binnen de timeout periode."
+    exit
+}
+
+$MaxRetries = 20
+$RetryCount = 0
+$IsReady = $false
+while (-not $IsReady -and $RetryCount -le $MaxRetries) {
+    $TestCmd = VBoxManage guestcontrol "$VM_KALI_NAME" run --username $KALI_USER --password $KALI_PASS --exe "/usr/bin/whoami" 2>$null
+
+    if ($TestCmd -match $KALI_USER) {
+        $IsReady = $true
+        Write-Host "Handshake successvol! $VM_KALI_NAME is klaar"
+    } else {
+        if ($retryCount -eq 0) {
+            Write-Host "Opstarten van $VM_KALI_NAME"
+            VBoxManage startvm "$VM_KALI_NAME" --type gui
+            $RetryCount++
+            Write-Host "Wachten tot $VM_KALI_NAME reageert..."
+        }
+        else {
+            Write-Host "$VM_KALI_NAME is nog niet klaar (Poging: $RetryCount/$MaxRetries). Wacht 5s..."
+            Start-Sleep -Seconds 5
+            $RetryCount++
+        }
+    }
+}
+
+if (-not $IsReady) {
+    Write-Error "$VM_KALI_NAME reageert niet binnen de timeout periode."
+    exit
+}
 
 # Now it is safe to run your copyto and run commands
-Write-Host "Proceeding with Redis installation..."
+Write-Host "Doorgaan met de Redis installatie..."
 
 # Copy the setup script from your Windows host to the VM's /tmp folder
-VBoxManage guestcontrol "$VM_TARGET_NAME" copyto --username $USER --password $PASS "$SETUP_SCRIPT" "/tmp/setup_redis.sh"
+VBoxManage guestcontrol "$VM_TARGET_NAME" copyto --username $TARGET_USER --password $TARGET_PASS "$SETUP_SCRIPT" "/tmp/setup_redis.sh"
 
 # Execute the script inside the VM
-VBoxManage guestcontrol "$VM_TARGET_NAME" run --username $USER --password $PASS --exe "/bin/bash" -- "/tmp/setup_redis.sh"
+VBoxManage guestcontrol "$VM_TARGET_NAME" run --username $TARGET_USER --password $TARGET_PASS --exe "/bin/bash" -- "/tmp/setup_redis.sh"
