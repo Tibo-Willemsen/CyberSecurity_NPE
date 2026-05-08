@@ -69,9 +69,16 @@ Voor Alizee:
 
 In setup_redis.sh hebben wij een lijn die zegt: "echo "$PASSWORD" | sudo -S sed -i "s/protected-mode yes/protected-mode no/" /etc/redis/redis.conf". Dit zal de protectie modus van redis afzetten. Dit is effectief de bedoeling en hoort bij onze demonstratie.Wat we proberen simuleren is een luie en slechte admin die dit op off zet om andere devices makkelijker access te geven aan de redis service. Dit komt omdat als het aan staat, dan accepteert redis enkel connecties die van de local host komen. 
 
-Vaak maakt deze redis sandbox escape deel uit van een chain van aanvallen. Waarbij de aanvaller eerst connectie maakt met de server zelf, met vb. SSRF, en dan de redis sandbox escape kwetsbaarheid gebruikt om aan de server te geraken. Vaak wordt dit dan ook nog gevolgd door een privlidge escalatie omdat met de redis sandbox escape kwetsbaarheid gebruik jij de user die redis gebruikt (vaak redis). Deze user heeft vaak niet veel rechten of toch niet de nodige. Wat niet betekent dat je niet vanalles kan doen met deze redis gebruiker. 
+Vaak maakt deze redis sandbox escape deel uit van een chain van aanvallen. Waarbij de aanvaller eerst connectie maakt met de server zelf, met vb. SSRF, en dan de redis sandbox escape kwetsbaarheid gebruikt om aan de server te geraken. Vaak wordt dit dan ook nog gevolgd door een privlidge escalatie omdat met de redis sandbox escape kwetsbaarheid gebruik jij de user die redis gebruikt (vaak redis). Deze user heeft vaak niet veel rechten of toch niet de nodige. Wat niet betekent dat je geen kwaad kan doen met deze redis gebruiker. Het maakt namelijk allemaal uit van de rechten van deze gebruiker. 
 
-## Makers
+## Oplossing
+
+Er zijn een paar oplossingen om deze kwetsbaarheid te vermijden of toch de schade zo minimaal mogelijk te houden. Het eerste is deze proteced mode, het is best om deze altijd op on te zetten. Je zal misschien wat meer tijd moeten steken in het verbinden van andere met andere apperatuur. Maar, dit is beter dan een kwetsbaarheid open te hebben. Verder is het ook belangrijk dat je de user zo weinig mogelijke rechten geeft. Zo kan je de schade zo klein mogelijk houden, ook al geraakt de persoon binnen. 
+
+Maar deze oplossingen gelden alleen als je echt nog de kwetsbare versie van redis wenst te gebruiken. Er bestaan namelijk al een nieuwe versie voor debian devices die wel veilig is. Dit omdat ze de Lua package module beter afschermen. Ze zullen namelijk de package en os modules in de Lua bibliotheken van redis volledig verwijderen. Hierdoor kan je de sandbox dus niet meer ontsnappen.   
+
+
+## Creators
 
 | Name               | Github                                                 |
 | ------------------ | ------------------------------------------------------ |

