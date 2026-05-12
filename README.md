@@ -63,7 +63,10 @@ Voor Tibo:
     - $VDI_TARGET_PATH = "C:\Users\wille\CyberSecVirt\VDI's\64bit\Ubuntu_20.04.4.vdi" 
     - $VDI_KALI_PATH = "C:\Users\wille\CyberSecVirt\VDI's\kali-linux-2026.1-virtualbox-amd64\kali-linux-2026.1-virtualbox-amd64.vdi"
 
-Voor Alizee:
+Voor Alizee
+    - $SETUP_SCRIPT = "C:\Users\alize\Documents\CyberSecurity_NPE\setup\setup_redis.sh"
+    - $VDI_TARGET_PATH = "C:\Users\alize\Downloads\64bit\64bit\Ubuntu_20.04.4.vdi"
+    - $VDI_KALI_PATH = "C:\Users\alize\Downloads\kali-linux-2026.1-virtualbox-amd64\kali-linux-2026.1-virtualbox-amd64"
 
 ## Verduidelijkingen
 
