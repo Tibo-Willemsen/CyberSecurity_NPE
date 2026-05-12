@@ -37,7 +37,7 @@ Deze moeten uitgevoerd worden in 2 aparte terminals en in de juiste volgorde (zo
 
 Eerst moet je een ubuntu 20.04 en kali VDI bestand downloaden. Je hebt versie 20.04 nodig omdat hier nog de kwetsbare LUA bibliotheken op staan. Je kan de ubuntu VDI dowloaden via deze link:  https://sourceforge.net/projects/osboxes/files/v/vb/55-U-u/20.04/20.04.4/64bit.7z/download en de kali VDI van deze link: https://www.kali.org/get-kali/#kali-virtual-machines
 
-### Stap 2: uit de VDIs uit
+### Stap 2: Pak de VDIs uit
 
 Wanneer de VDIs gedownload zijn, zal je 2 zip files hebben. Deze moet je uitpakken naar een plaats die je kan onthouden. Je zal dan ook deze locatie moeten invullen in de variabellen in het script [VboxCreationScript.ps1](VboxCreationScript.ps1). De variabellen die je zal moeten aanpassen zijn: $SETUP_SCRIPT, $VDI_TARGET_PATH and $VDI_KALI_PATH. Doe dit zoals je hieronder ziet:
     - $SETUP_SCRIPT --> Verander je naar de locatie van het script [setup_redis.sh](./setup/setup_redis.sh)
