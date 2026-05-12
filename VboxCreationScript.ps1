@@ -2,13 +2,14 @@
 $ExistingVMs = VBoxManage list vms
 $VM_TARGET_NAME = "Redis_Target"
 $VM_KALI_NAME = "Kali_Attacker"
-$VDI_TARGET_PATH = "C:\Users\wille\CyberSecVirt\VDI's\64bit\Ubuntu_20.04.4.vdi"
-$VDI_KALI_PATH = "C:\Users\wille\CyberSecVirt\VDI's\kali-linux-2026.1-virtualbox-amd64\kali-linux-2026.1-virtualbox-amd64.vdi"
+$VDI_TARGET_PATH = "C:\Users\alize\Documents\NPE\Ubuntu_20.04.4.vdi"
+$VDI_KALI_PATH = "C:\Users\alize\Documents\NPE\kali-linux-2026.1-virtualbox-amd64.vdi"
 $TARGET_USER = "osboxes"
 $TARGET_PASS = "osboxes.org"
 $KALI_USER = "kali"
 $KALI_PASS = "kali"
-$SETUP_SCRIPT = "C:\Users\wille\CyberSecVirt\CyberSecurity_NPE\setup\setup_redis.sh"
+$SETUP_SCRIPT = "C:\Users\alize\Documents\CyberSecurity_NPE\setup\setup_redis.sh"
+
 
 Write-Host "Starten met de installaties van de VMs"
 Write-Host "Verwerken van $VM_TARGET_NAME"
@@ -57,7 +58,7 @@ if ($ExistingVMs -match "`"$VM_KALI_NAME`"") {
 
 # Start de vms en wacht tot ze reageren
 Write-Host "Opstarten van de VMs en wachten tot ze reageren"
-$MaxRetries = 20
+$MaxRetries = 30
 $RetryCount = 0
 $IsReady = $false
 while (-not $IsReady -and $RetryCount -le $MaxRetries) {
@@ -86,7 +87,7 @@ if (-not $IsReady) {
     exit
 }
 
-$MaxRetries = 20
+$MaxRetries = 30
 $RetryCount = 0
 $IsReady = $false
 while (-not $IsReady -and $RetryCount -le $MaxRetries) {
