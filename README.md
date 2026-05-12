@@ -33,6 +33,10 @@ Deze moeten uitgevoerd worden in 2 aparte terminals en in de juiste volgorde (zo
 
 ## Stappenplan
 
+### BELANGRIJK
+
+Zorg ervoor dat de file [setup_redis.sh](./setup/setup_redis.sh) in LF staat en niet CRLF. Je kan dit veranderen in VSC door op CRLF onderaan te drukken en dan te veranderen naar LF.
+
 ### Stap 1: Download ubuntu 20.04 en kali VDI
 
 Eerst moet je een ubuntu 20.04 en kali VDI bestand downloaden. Je hebt versie 20.04 nodig omdat hier nog de kwetsbare LUA bibliotheken op staan. Je kan de ubuntu VDI dowloaden via deze link:  https://sourceforge.net/projects/osboxes/files/v/vb/55-U-u/20.04/20.04.4/64bit.7z/download en de kali VDI van deze link: https://www.kali.org/get-kali/#kali-virtual-machines
